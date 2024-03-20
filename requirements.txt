@@ -46,7 +46,7 @@ social-auth-core==4.3.0
 sqlparse==0.4.2
 tzdata==2022.1
 uritemplate==4.1.1
-urllib3==1.26.9
+urllib3==1.26.18
 virtualenv==20.16.5
 virtualenv-clone==0.5.7
 whitenoise==6.2.0
