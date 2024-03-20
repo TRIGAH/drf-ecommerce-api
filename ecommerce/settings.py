@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "_e)op=dl#c3o=yf=z0_8@)nqb*@a!d5z2&7%1sv8^pp76qlbsu"
+SECRET_KEY = os.environ.get('AWS_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'my-shoppit.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'my-shoppit.herokuapp.com']
 
 
 # Application definition
@@ -41,15 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'storeapp',
     'core',
+    'UserProfile',
     'api',
-    'rest_framework',
-    'django_filters',
-    'djoser'
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -71,7 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-              
+                'storeapp.context_processors.cart_renderer'
             ],
         },
     },
@@ -83,18 +81,36 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-
-
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'ecom',
+        'USER': 'postgres',
+        'PASSWORD': 'database',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'ecommerce',
+#         'USER': os.environ.get('DB_USER'),
+#         'PASSWORD': os.environ.get('DB_PASS'),
+#         'HOST':  os.environ.get('DB_HOST'),
+#         'PORT': '5432'
+#     }
+# }
 
 
 
@@ -134,14 +150,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = BASE_DIR/'static'
+STATICFILES_DIRS = [BASE_DIR/'static']
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR/'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -151,39 +164,12 @@ AUTH_USER_MODEL = 'core.User'
 
 
 
-# REST_FRAMEWORK = {
-#     'PAGE_SIZE': 3
-# }
 
 
-
-AWS_QUERYSTRING_AUTH = False
+# AWS_QUERYSTRING_AUTH = False
 # AWS_S3_FILE_OVERWRITE = False
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # AWS_ACCESS_KEY_ID  = os.environ.get('AWS_ACCESS_KEY')
 # AWS_SECRET_ACCESS_KEY =  os.environ.get('AWS_SECRET_KEY')
 # AWS_STORAGE_BUCKET_NAME = 'shopit-bucket'
 
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-}
-
-
-SIMPLE_JWT = {
-   'AUTH_HEADER_TYPES': ('JWT',),
-   'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=2),
-}
-
-
-# "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY3MjMxMDM0MywiaWF0IjoxNjcyMTM3NTQzLCJqdGkiOiI4ZTA2ZjFmNTZmMjg0NjdjOGUxYTczMmIwZWM3ODkwZSIsInVzZXJfaWQiOjh9.cmnXNQBWapetuPG2TQpoVNjm6NEvzT7awz-wvjPrPUg",
-#     "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcyMjIzOTQzLCJpYXQiOjE2NzIxMzc1NDMsImp0aSI6ImQxYjcxNzBiMjgyNTRlNjg4ZjgwNTM0NGViMTYzYjU5IiwidXNlcl9pZCI6OH0.garu_BNiSM5fB48TRbRMXypgECuSmt4ErveOVsynISQ"
-
-DJOSER = {
-    'SERIALIZERS':{
-        'user_create': "core.serializers.MyUserCreateSerializer"
-    }
-}
