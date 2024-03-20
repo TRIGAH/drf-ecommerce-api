@@ -28,7 +28,7 @@ Jinja2==3.1.2
 jmespath==1.0.1
 MarkupSafe==2.1.1
 oauthlib==3.2.0
-Pillow==9.1.1
+Pillow==10.2.0
 pipenv==2022.10.12
 platformdirs==2.5.2
 psycopg2==2.9.3
