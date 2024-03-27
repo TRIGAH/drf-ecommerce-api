@@ -40,7 +40,18 @@ def api_product(request,pk):
 
 
 @api_view(['GET'])
-def api_category(request):
+def api_categorys(request):
     categorys = Category.objects.all()
     serializer = CategorySerializer(categorys, many=True)
     return Response(serializer.data, status=200)
+
+
+@api_view(['GET'])
+def api_category(request,pk):
+
+        try:
+            category = get_object_or_404(Category,category_id=pk)
+            serializer = ProductSerializer(category)
+            return Response(serializer.data)
+        except Exception as e:
+            raise ValidationError("Invalid UUID format: {}".format(str(e)))
