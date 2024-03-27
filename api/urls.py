@@ -1,7 +1,8 @@
 from django.urls import path, include
-from api.views import api_products,api_category
+from api import views
 
 urlpatterns = [
-    path('product/', api_products),
-    path('category/', api_category),
+    path('products/', views.api_products),
+    path('products/<str:pk>/', views.api_product),
+    path('category/', views.api_category),
 ]
