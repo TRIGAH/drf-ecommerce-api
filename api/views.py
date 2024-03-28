@@ -32,7 +32,7 @@ def api_products(request):
 def api_product(request,pk):
         try:
             product = get_object_or_404(Product,id=pk)
-            
+
             if request.method == 'GET':
                     serializer = ProductSerializer(product)
                     return Response(serializer.data)
@@ -49,14 +49,22 @@ def api_product(request,pk):
             
 
 
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def api_categorys(request):
-    categorys = Category.objects.all()
-    serializer = CategorySerializer(categorys, many=True)
-    return Response(serializer.data, status=200)
+    
+    if request.method == 'GET':
+        categorys = Category.objects.all()
+        serializer = CategorySerializer(categorys, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    if request.method == 'POST':
+       serializer = CategorySerializer(data=request.data)
+       serializer.is_valid(raise_exception = True)
+       serializer.save()
+       return Response(serializer.data)
 
 
-@api_view(['GET'])
+@api_view(['GET','PUT'])
 def api_category(request,pk):
 
         try:
