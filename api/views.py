@@ -61,46 +61,50 @@ class ApiProduct(RetrieveUpdateDestroyAPIView):
     #         raise ValidationError("Invalid UUID format: {}".format(str(e)))
         
 
-class ApiCategories(APIView):
+class ApiCategories(ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
-    def get(self,request):
-        categories = Category.objects.all()
-        serializer = CategorySerializer(categories, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    # def get(self,request):
+    #     categories = Category.objects.all()
+    #     serializer = CategorySerializer(categories, many=True)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
          
-    def post(self,request):
-        serializer = CategorySerializer(data=request.data)
-        serializer.is_valid(raise_exception = True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_201_CREATED)            
+    # def post(self,request):
+    #     serializer = CategorySerializer(data=request.data)
+    #     serializer.is_valid(raise_exception = True)
+    #     serializer.save()
+    #     return Response(serializer.data,status=status.HTTP_201_CREATED)            
             
 
-class ApiCategory(APIView):
-     
-    def get(self,request,pk):
-        try:
-            category = get_object_or_404(Category,category_id=pk)
-            serializer = CategorySerializer(category)
-            return Response(serializer.data)
-        except Exception as e:
-                raise ValidationError("Invalid UUID format: {}".format(str(e)))
+class ApiCategory(RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    # def get(self,request,pk):
+    #     try:
+    #         category = get_object_or_404(Category,category_id=pk)
+    #         serializer = CategorySerializer(category)
+    #         return Response(serializer.data)
+    #     except Exception as e:
+    #             raise ValidationError("Invalid UUID format: {}".format(str(e)))
         
 
-    def put(self,request,pk):    
-        try:
-            category = get_object_or_404(Category,category_id=pk)
-            serializer = CategorySerializer(category,data=request.data)
-            serializer.is_valid(raise_exception = True)
-            serializer.save()
-            return Response(serializer.data)
-        except Exception as e:
-                raise ValidationError("Invalid UUID format: {}".format(str(e)))
+    # def put(self,request,pk):    
+    #     try:
+    #         category = get_object_or_404(Category,category_id=pk)
+    #         serializer = CategorySerializer(category,data=request.data)
+    #         serializer.is_valid(raise_exception = True)
+    #         serializer.save()
+    #         return Response(serializer.data)
+    #     except Exception as e:
+    #             raise ValidationError("Invalid UUID format: {}".format(str(e)))
         
-    def delete(self,request,pk):
-        try:
-            category = get_object_or_404(Category,category_id=pk)
-            category.delete()
-            return Response(status = status.HTTP_204_NO_CONTENT)
-        except Exception as e:
-            raise ValidationError("Invalid UUID format: {}".format(str(e)))
+    # def delete(self,request,pk):
+    #     try:
+    #         category = get_object_or_404(Category,category_id=pk)
+    #         category.delete()
+    #         return Response(status = status.HTTP_204_NO_CONTENT)
+    #     except Exception as e:
+    #         raise ValidationError("Invalid UUID format: {}".format(str(e)))
 
