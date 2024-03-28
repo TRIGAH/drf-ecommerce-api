@@ -13,21 +13,3 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
-
-    def validate(self,pk):
-        if len(pk.strip()) != 32:
-            raise ValidationError("Not a valid UUID")     
-
-    # def validate(self, data):
-    #     # Perform validation check here
-
-    #     try:
-    #         # Code that might raise the badly formed hexadecimal UUID string exception
-    #         uuid_value = uuid4(data['id'])
-    #     except ValueError as e:
-    #         # Handle the badly formed hexadecimal UUID string exception
-    #         raise ValidationError("Invalid UUID format: {}".format(str(e)))
-    #     except Exception as e:
-    #         # Handle other exceptions
-    #         raise serializers.ValidationError("An error occurred: {}".format(str(e)))
-    #     return data

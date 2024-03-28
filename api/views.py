@@ -10,33 +10,35 @@ from rest_framework.exceptions import ValidationError
 
 # Create your views here.
 
-class MyError(APIException):
-    """Readers error class"""
-    def __init__(self, msg):
-        APIException.__init__(self, msg)
-        self.status_code = status.HTTP_400_BAD_REQUEST
-        self.message = msg
 
-
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def api_products(request):
-    products = Product.objects.all()
-    serializer = ProductSerializer(products, many=True)
-    return Response(serializer.data, status=200)
+
+    if request.method == 'GET':
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=200)
+    
+    if request.method == 'POST':
+        serializer = ProductSerializer(data=request.data)
+        serializer.is_valid(raise_exception = True)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+
+         
 
 
-@api_view(['GET'])
+@api_view(['GET','PUT'])
 def api_product(request,pk):
-
-        try:
-            product = get_object_or_404(Product,id=pk)
-            serializer = ProductSerializer(product)
-            return Response(serializer.data)
-        except Exception as e:
-            raise ValidationError("Invalid UUID format: {}".format(str(e)))
-
-        
-       
+        if request.method == 'GET':
+            try:
+                product = get_object_or_404(Product,id=pk)
+                serializer = ProductSerializer(product)
+                return Response(serializer.data)
+            except Exception as e:
+                raise ValidationError("Invalid UUID format: {}".format(str(e)))
+            
+            
 
 
 @api_view(['GET'])
@@ -51,7 +53,7 @@ def api_category(request,pk):
 
         try:
             category = get_object_or_404(Category,category_id=pk)
-            serializer = ProductSerializer(category)
+            serializer = CategorySerializer(category)
             return Response(serializer.data)
         except Exception as e:
             raise ValidationError("Invalid UUID format: {}".format(str(e)))
