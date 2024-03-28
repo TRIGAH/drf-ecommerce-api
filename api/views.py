@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 # Create your views here.
 
 class ApiProducts(APIView):
-    
+
     def get(self,request):
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
@@ -25,27 +25,27 @@ class ApiProducts(APIView):
         return Response(serializer.data,status=status.HTTP_201_CREATED)
                
 
-
-         
-
-
-@api_view(['GET','PUT'])
-def api_product(request,pk):
+class ApiProduct(APIView):
+     
+    def get(self,request,pk):
         try:
             product = get_object_or_404(Product,id=pk)
-
-            if request.method == 'GET':
-                    serializer = ProductSerializer(product)
-                    return Response(serializer.data)
-            
-            if request.method == 'PUT':
-                serializer = ProductSerializer(product,data=request.data)
-                serializer.is_valid(raise_exception = True)
-                serializer.save()
-                return Response(serializer.data)
-
+            serializer = ProductSerializer(product)
+            return Response(serializer.data)
         except Exception as e:
                 raise ValidationError("Invalid UUID format: {}".format(str(e)))
+        
+
+    def put(self,request,pk):    
+        try:
+            product = get_object_or_404(Product,id=pk)
+            serializer = ProductSerializer(product,data=request.data)
+            serializer.is_valid(raise_exception = True)
+            serializer.save()
+            return Response(serializer.data)
+        except Exception as e:
+                raise ValidationError("Invalid UUID format: {}".format(str(e)))
+         
             
             
 
