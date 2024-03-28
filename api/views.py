@@ -9,27 +9,19 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
+from rest_framework.viewsets import ModelViewSet
 
 
 # Create your views here.
 
-class ApiProducts(ListCreateAPIView):
+class ProductsViewSet(ModelViewSet):
     queryset  = Product.objects.all()
-    serializer_class = ProductSerializer
-               
+    serializer_class = ProductSerializer  
 
-class ApiProduct(RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-        
-
-class ApiCategories(ListCreateAPIView):
+class CategoriesViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer           
             
 
-class ApiCategory(RetrieveUpdateDestroyAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
 
 
