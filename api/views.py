@@ -8,50 +8,57 @@ from rest_framework.exceptions import APIException
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.views import APIView
+from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
+
 
 # Create your views here.
 
-class ApiProducts(APIView):
+class ApiProducts(ListCreateAPIView):
+    queryset  = Product.objects.all()
+    serializer_class = ProductSerializer
 
-    def get(self,request):
-        products = Product.objects.all()
-        serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    # def get(self,request):
+    #     products = Product.objects.all()
+    #     serializer = ProductSerializer(products, many=True)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
          
-    def post(self,request):
-        serializer = ProductSerializer(data=request.data)
-        serializer.is_valid(raise_exception = True)
-        serializer.save()
-        return Response(serializer.data,status=status.HTTP_201_CREATED)
+    # def post(self,request):
+    #     serializer = ProductSerializer(data=request.data)
+    #     serializer.is_valid(raise_exception = True)
+    #     serializer.save()
+    #     return Response(serializer.data,status=status.HTTP_201_CREATED)
                
 
-class ApiProduct(APIView):
+class ApiProduct(RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
      
-    def get(self,request,pk):
-        try:
-            product = get_object_or_404(Product,id=pk)
-            serializer = ProductSerializer(product)
-            return Response(serializer.data)
-        except Exception as e:
-                raise ValidationError("Invalid UUID format: {}".format(str(e)))
+    # def get(self,request,pk):
+    #     try:
+    #         product = get_object_or_404(Product,id=pk)
+    #         serializer = ProductSerializer(product)
+    #         return Response(serializer.data)
+    #     except Exception as e:
+    #             raise ValidationError("Invalid UUID format: {}".format(str(e)))
         
 
-    def put(self,request,pk):    
-        try:
-            product = get_object_or_404(Product,id=pk)
-            serializer = ProductSerializer(product,data=request.data)
-            serializer.is_valid(raise_exception = True)
-            serializer.save()
-            return Response(serializer.data)
-        except Exception as e:
-                raise ValidationError("Invalid UUID format: {}".format(str(e)))
+    # def put(self,request,pk):    
+    #     try:
+    #         product = get_object_or_404(Product,id=pk)
+    #         serializer = ProductSerializer(product,data=request.data)
+    #         serializer.is_valid(raise_exception = True)
+    #         serializer.save()
+    #         return Response(serializer.data)
+    #     except Exception as e:
+    #             raise ValidationError("Invalid UUID format: {}".format(str(e)))
          
-    def delete(self,request,pk):
-        try:
-            product = get_object_or_404(Product,id=pk)
-            product.delete()
-        except Exception as e:
-            raise ValidationError("Invalid UUID format: {}".format(str(e)))
+    # def delete(self,request,pk):
+    #     try:
+    #         product = get_object_or_404(Product,id=pk)
+    #         product.delete()
+    #         return Response(status = status.HTTP_204_NO_CONTENT)
+    #     except Exception as e:
+    #         raise ValidationError("Invalid UUID format: {}".format(str(e)))
         
 
 class ApiCategories(APIView):
@@ -93,6 +100,7 @@ class ApiCategory(APIView):
         try:
             category = get_object_or_404(Category,category_id=pk)
             category.delete()
+            return Response(status = status.HTTP_204_NO_CONTENT)
         except Exception as e:
             raise ValidationError("Invalid UUID format: {}".format(str(e)))
 
