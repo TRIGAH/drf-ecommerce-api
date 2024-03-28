@@ -7,23 +7,24 @@ from .serializers import CategorySerializer,ProductSerializer
 from rest_framework.exceptions import APIException
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
+from rest_framework.views import APIView
 
 # Create your views here.
 
-
-@api_view(['GET','POST'])
-def api_products(request):
-
-    if request.method == 'GET':
+class ApiProducts(APIView):
+    
+    def get(self,request):
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data, status=200)
-    
-    if request.method == 'POST':
+        return Response(serializer.data, status=status.HTTP_200_OK)
+         
+    def post(self,request):
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception = True)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_201_CREATED)
+               
+
 
          
 
