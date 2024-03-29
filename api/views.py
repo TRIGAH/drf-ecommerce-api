@@ -2,8 +2,8 @@ import uuid
 from django.shortcuts import render,get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from storeapp.models import Product,Category
-from .serializers import CategorySerializer,ProductSerializer
+from storeapp.models import Product,Category,Review
+from .serializers import CategorySerializer,ProductSerializer,ReviewSerializer
 from rest_framework.exceptions import APIException
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
@@ -25,11 +25,18 @@ class ProductsViewSet(ModelViewSet):
     ordering_fields = ['old_price']
     pagination_class = PageNumberPagination
 
+            
 class CategoriesViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer 
       
-            
+class ReviewViewSet(ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer 
+
+    def get_serializer_context(self):
+        return {'product_id':self.kwargs['product_pk']}
+      
 
 
 
