@@ -23,6 +23,14 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id','name','description','inventory','price','images','uploaded_images']
 
+    def create(self,validated_data):
+        uploaded_images = validated_data.pop('uploaded_images')
+        product = Product.objects.create(**validated_data)
+        for image in uploaded_images:
+            new_product_image = ProductImage.objects.create(product=product,image=image)
+
+        return product    
+
 
 
 class ReviewSerializer(serializers.ModelSerializer):
