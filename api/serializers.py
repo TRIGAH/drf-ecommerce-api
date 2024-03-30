@@ -1,6 +1,6 @@
 from uuid import uuid4
 from rest_framework import serializers
-from storeapp.models import Category,Product,Cartitems,Cart,Review
+from storeapp.models import Category,Product,Cartitems,Cart,Review,ProductImage
 from rest_framework.exceptions import ValidationError
 
 
@@ -9,11 +9,20 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id','product','image']
+
 class ProductSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many = True, read_only = True)
+    uploaded_images = serializers.ListField(
+        child=serializers.ImageField(max_length = 1000000, allow_empty_file = False, use_url = False), write_only = True
+    )
     class Meta:
         model = Product
-        fields = '__all__'
-    category = CategorySerializer()
+        fields = ['id','name','description','inventory','price','images','uploaded_images']
+
 
 
 class ReviewSerializer(serializers.ModelSerializer):
