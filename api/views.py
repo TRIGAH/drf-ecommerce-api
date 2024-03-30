@@ -1,7 +1,7 @@
 import uuid
 from storeapp.models import Product,Category,Review,Cart
 from .serializers import CategorySerializer,ProductSerializer,ReviewSerializer,CartSerializer
-from rest_framework.mixins import CreateModelMixin
+from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.filters import SearchFilter,OrderingFilter
 from rest_framework.pagination import PageNumberPagination 
@@ -34,8 +34,6 @@ class ReviewViewSet(ModelViewSet):
         return {'product_id':self.kwargs['product_pk']}
       
 
-
-
-class CartViewSet(CreateModelMixin,GenericViewSet):
+class CartViewSet(CreateModelMixin,RetrieveModelMixin,GenericViewSet):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
