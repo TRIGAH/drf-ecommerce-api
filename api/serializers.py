@@ -59,33 +59,44 @@ class CartitemsSerializer(serializers.ModelSerializer):
 class AddCartitemsSerializer(serializers.ModelSerializer):
     product_id = serializers.UUIDField()
 
+    class Meta:
+        model = Cartitems
+        fields = ['id','product_id','quantity']
+
     def save(self, **kwargs):
         cart_id = self.context['cart_id']
         product_id = self.validated_data['product_id']
         quantity = self.validated_data['quantity']
 
-        if Cartitems.objects.filter(product_id=product_id).exists():
+        if Cartitems.objects.filter(cart_id=cart_id,product_id=product_id).exists():
 
             try:
-                cart_item = Cartitems.objects.get(product_id=product_id)
+                cart_item = Cartitems.objects.get(cart_id=cart_id,product_id=product_id)
                 cart_item.quantity += quantity
                 cart_item.save()
                 self.instance = cart_item
-
+                return self.instance
+            
             except Exception as e:
                 raise serializers.ValidationError({'error':e})
             
-            return self.instance
         else: 
-            self.instance = Cartitems.objects.create(cart_id=cart_id,product_id=product_id)      
-            return self.instance
+            try:
+               
+               self.instance = Cartitems.objects.create(cart_id=cart_id,**self.validated_data)   
+               return self.instance
+            
+            except Exception as e:
+                raise serializers.ValidationError({'error':e})
 
-
-
+class UpdateCartitemsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cartitems
-        fields = ['id','product_id','quantity']
+        fields = ['quantity']
+
+
+   
     
 class CartSerializer(serializers.ModelSerializer):
     cart_id = serializers.UUIDField(read_only=True)

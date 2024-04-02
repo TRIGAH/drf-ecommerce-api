@@ -1,6 +1,6 @@
 import uuid
 from storeapp.models import Product,Category,Review,Cart,Cartitems
-from .serializers import CategorySerializer,ProductSerializer,ReviewSerializer,CartSerializer,CartitemsSerializer,AddCartitemsSerializer
+from .serializers import CategorySerializer,ProductSerializer,ReviewSerializer,CartSerializer,CartitemsSerializer,AddCartitemsSerializer,UpdateCartitemsSerializer
 from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin,DestroyModelMixin
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.filters import SearchFilter,OrderingFilter
@@ -40,6 +40,8 @@ class CartViewSet(CreateModelMixin,RetrieveModelMixin,DestroyModelMixin,GenericV
 
 class CartitemViewSet(ModelViewSet):
 
+    http_method_names = ['get','post','patch','delete']
+
     def get_queryset(self):
         queryset = Cartitems.objects.filter(cart_id = self.kwargs['cart_pk'])
         return queryset
@@ -48,6 +50,9 @@ class CartitemViewSet(ModelViewSet):
         
         if self.request.method == 'POST':
             return AddCartitemsSerializer
+        
+        elif self.request.method == 'PATCH':
+            return UpdateCartitemsSerializer
         
         return CartitemsSerializer
     
