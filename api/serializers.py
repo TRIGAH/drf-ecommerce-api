@@ -55,6 +55,11 @@ class CartitemsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cartitems
         fields = ['id','product','quantity','subTotal']
+
+class AddCartitemsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cartitems
+        fields = ['id','product_id','quantity']
     
 class CartSerializer(serializers.ModelSerializer):
     cart_id = serializers.UUIDField(read_only=True)
