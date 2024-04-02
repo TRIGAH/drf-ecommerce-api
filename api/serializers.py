@@ -63,7 +63,26 @@ class AddCartitemsSerializer(serializers.ModelSerializer):
         cart_id = self.context['cart_id']
         product_id = self.validated_data['product_id']
         quantity = self.validated_data['quantity']
-        
+
+        if Cartitems.objects.filter(product_id=product_id).exists():
+
+            try:
+                cart_item = Cartitems.objects.get(product_id=product_id)
+                cart_item.quantity += quantity
+                cart_item.save()
+                self.instance = cart_item
+
+            except Exception as e:
+                raise serializers.ValidationError({'error':e})
+            
+            return self.instance
+        else: 
+            self.instance = Cartitems.objects.create(cart_id=cart_id,product_id=product_id)      
+            return self.instance
+
+
+
+
     class Meta:
         model = Cartitems
         fields = ['id','product_id','quantity']
@@ -80,5 +99,4 @@ class CartSerializer(serializers.ModelSerializer):
     # def main_total(self, cart:Cart):
     #     items = cart.items.all()
     #     return sum([item.quantity * item.product.price for item in items])    
-
 
