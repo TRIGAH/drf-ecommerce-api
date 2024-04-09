@@ -16,6 +16,8 @@ class CustomUserAdmin(UserAdmin):
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
+    list_display = ('email', 'first_name', 'last_name', 'is_staff')
+    search_fields = ('email', 'first_name', 'last_name')
     # Remove 'username' from the fieldsets or exclude it if it's specified
     exclude = ('username',)  # Use exclude if 'username' is specified in the model
     ordering = ('email',)
@@ -24,6 +26,33 @@ class CustomUserAdmin(UserAdmin):
 
 # Register the CustomUserAdmin with the CustomUser model
 admin.site.register(User, CustomUserAdmin)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # class CustomUserAdmin(UserAdmin):
