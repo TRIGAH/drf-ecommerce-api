@@ -10,6 +10,8 @@ from .serializers import (
     UpdateCartitemsSerializer,
     ProfileSerializer
     )
+from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.parsers import MultiPartParser,FormParser
 from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin,DestroyModelMixin
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
@@ -75,3 +77,12 @@ class ProfileViewSet(ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     parser_classes = (MultiPartParser,FormParser)
+
+    def create(self,request):
+        name = request.data['name']
+        bio = request.data['bio']
+        picture = request.data['picture']
+
+        Profile.objects.create(name=name, bio=bio, picture=picture )
+
+        return Response("Profile Created Successfully", status = status.HTTP_201_CREATED)
