@@ -1,6 +1,16 @@
 import uuid
 from storeapp.models import Product,Category,Review,Cart,Cartitems,Profile
-from .serializers import CategorySerializer,ProductSerializer,ReviewSerializer,CartSerializer,CartitemsSerializer,AddCartitemsSerializer,UpdateCartitemsSerializer
+from .serializers import (
+    CategorySerializer,
+    ProductSerializer,
+    ReviewSerializer,
+    CartSerializer,
+    CartitemsSerializer,
+    AddCartitemsSerializer,
+    UpdateCartitemsSerializer,
+    ProfileSerializer
+    )
+from rest_framework.parsers import MultiPartParser,FormParser
 from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin,DestroyModelMixin
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.filters import SearchFilter,OrderingFilter
@@ -62,4 +72,6 @@ class CartitemViewSet(ModelViewSet):
 
 
 class ProfileViewSet(ModelViewSet):
-    pass
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    parser_classes = (MultiPartParser,FormParser)
