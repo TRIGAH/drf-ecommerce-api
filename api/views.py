@@ -1,5 +1,5 @@
 import uuid
-from storeapp.models import Product,Category,Review,Cart,Cartitems
+from storeapp.models import Product,Category,Review,Cart,Cartitems,Profile
 from .serializers import CategorySerializer,ProductSerializer,ReviewSerializer,CartSerializer,CartitemsSerializer,AddCartitemsSerializer,UpdateCartitemsSerializer
 from rest_framework.mixins import CreateModelMixin,RetrieveModelMixin,DestroyModelMixin
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
@@ -61,4 +61,5 @@ class CartitemViewSet(ModelViewSet):
     
 
 
- 
+class ProfileViewSet(ModelViewSet):
+    pass
