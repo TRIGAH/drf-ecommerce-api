@@ -45,13 +45,13 @@ class ReviewSerializer(serializers.ModelSerializer):
     
 
 
-class CartitemsProductSerializer(serializers.ModelSerializer):
+class SimpleProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['id','name','price']
 
 class CartitemsSerializer(serializers.ModelSerializer):
-    product = CartitemsProductSerializer(many=False)
+    product = SimpleProductSerializer(many=False)
     class Meta:
         model = Cartitems
         fields = ['id','product','quantity','subTotal']
@@ -106,12 +106,19 @@ class CartSerializer(serializers.ModelSerializer):
         model = Cart
         fields = ['cart_id','items','cart_total']
 
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = SimpleProductSerializer()
+
+    class Meta:
+        model=OrderItem
+        fields = ['id','order','product','quantity']   
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True, read_only=True)
     class Meta:
         model=Order
-        fields = ['id','placed_at','pending_status','owner']        
+        fields = ['id','placed_at','pending_status','owner','items']        
 
 
 class ProfileSerializer(serializers.ModelSerializer):
