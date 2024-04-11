@@ -1,6 +1,6 @@
 from uuid import uuid4
 from rest_framework import serializers
-from storeapp.models import Category,Product,Cartitems,Cart,Review,ProductImage,Profile
+from storeapp.models import *
 from rest_framework.exceptions import ValidationError
 
 
@@ -105,6 +105,13 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ['cart_id','items','cart_total']
+
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Order
+        fields = ['id','placed_at','pending_status','owner']        
 
 
 class ProfileSerializer(serializers.ModelSerializer):
