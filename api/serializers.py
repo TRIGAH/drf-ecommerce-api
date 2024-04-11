@@ -108,10 +108,10 @@ class CartSerializer(serializers.ModelSerializer):
 
 class OrderItemSerializer(serializers.ModelSerializer):
     product = SimpleProductSerializer()
-
+   
     class Meta:
         model=OrderItem
-        fields = ['id','order','product','quantity']   
+        fields = ['id','product','quantity']   
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -120,6 +120,11 @@ class OrderSerializer(serializers.ModelSerializer):
         model=Order
         fields = ['id','placed_at','pending_status','owner','items']        
 
+class CreateOrderSerializer(serializers.Serializer):
+    cart_id = serializers.UUIDField() 
+
+    def save(self, **kwargs):
+        print(self.cart_id)
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
