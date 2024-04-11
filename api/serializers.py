@@ -124,7 +124,9 @@ class CreateOrderSerializer(serializers.Serializer):
     cart_id = serializers.UUIDField() 
 
     def save(self, **kwargs):
-        print(self.cart_id)
+        cart_id = self.validated_data['cart_id']
+        user_id = self.context['user_id']
+        print(cart_id,user_id)
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:

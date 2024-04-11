@@ -66,7 +66,6 @@ class CartitemViewSet(ModelViewSet):
 
 
 class OrderViewSet(ModelViewSet):
-    serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
@@ -79,6 +78,9 @@ class OrderViewSet(ModelViewSet):
         if user.is_staff:
             return Order.objects.all()
         return Order.objects.filter(owner=user)
+    
+    def get_serializer_context(self):
+        return {'user_id':self.request.user.id}
 
 
 
