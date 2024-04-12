@@ -2,6 +2,7 @@ from uuid import uuid4
 from rest_framework import serializers
 from storeapp.models import *
 from rest_framework.exceptions import ValidationError
+from django.db import transaction
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -124,9 +125,15 @@ class CreateOrderSerializer(serializers.Serializer):
     cart_id = serializers.UUIDField() 
 
     def save(self, **kwargs):
-        cart_id = self.validated_data['cart_id']
-        user_id = self.context['user_id']
-        print(cart_id,user_id)
+        with transaction.atomic():
+            cart_id = self.validated_data['cart_id']
+            user_id = self.context['user_id']
+            order=Order.objects.create(owner_id=user_id)
+            cartitems = Cartitems.objects.filter(cart_id=cart_id)
+            orderitems = [OrderItem(order=order,product=item.product,quantity=item.quantity) for item in cartitems ]
+            OrderItem.objects.bulk_create(orderitems)
+            Cart.objects.filter(id=cart_id).delete()
+        return order
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
