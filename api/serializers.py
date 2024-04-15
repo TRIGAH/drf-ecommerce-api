@@ -132,7 +132,7 @@ class CreateOrderSerializer(serializers.Serializer):
             cartitems = Cartitems.objects.filter(cart_id=cart_id)
             orderitems = [OrderItem(order=order,product=item.product,quantity=item.quantity) for item in cartitems ]
             OrderItem.objects.bulk_create(orderitems)
-            Cart.objects.filter(id=cart_id).delete()
+            Cart.objects.filter(cart_id=cart_id).delete()
         return order
 
 class ProfileSerializer(serializers.ModelSerializer):
