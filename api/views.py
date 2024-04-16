@@ -119,9 +119,23 @@ class OrderViewSet(ModelViewSet):
     def pay(self, request, pk=None):
         order = self.get_object() 
         amount = order.total_price
-        order_id = order.id
         email = request.user.email
+        order_id = order.id
         return initiate_payment(amount,email,order_id)
+    
+    @action(detail=False, methods=['post'])
+    def confirm_payment(self,request):
+        order_id = request.GET.get('o_id', None)
+        order = Order.objects.get(id=order_id)
+        order.pending_status = 'C'
+        order.save()
+        serializer = OrderSerializer(order)
+        data = {
+            'msg':'Payment Successful',
+            'data':serializer.data
+        }
+        return data
+
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
