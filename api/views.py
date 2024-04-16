@@ -2,6 +2,7 @@ import uuid
 import requests
 from storeapp.models import Product,Category,Review,Cart,Cartitems,Profile
 from .serializers import *
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser,FormParser
@@ -113,6 +114,14 @@ class CartitemViewSet(ModelViewSet):
 
 class OrderViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
+
+    @action(detail=True, methods=['post'])
+    def pay(self, request, pk=None):
+        order = self.get_object() 
+        amount = order.total_price
+        order_id = order.id
+        email = request.user.email
+        return initiate_payment(amount,email,order_id)
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
