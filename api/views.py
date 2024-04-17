@@ -27,7 +27,7 @@ def initiate_payment(amount, email, order_id):
     data = {
         "tx_ref": str(uuid.uuid4()),
         "amount": str(amount), 
-        "currency": "USD",
+        "currency": "NGN",
         "redirect_url": "http:/127.0.0.1:8000/api/orders/confirm_payment/?o_id=" + order_id,
         "meta": {
             "consumer_id": 23,
@@ -120,7 +120,7 @@ class OrderViewSet(ModelViewSet):
         order = self.get_object() 
         amount = order.total_price
         email = request.user.email
-        order_id = order.id
+        order_id = str(order.id)
         return initiate_payment(amount,email,order_id)
     
     @action(detail=False, methods=['post'])
@@ -134,7 +134,7 @@ class OrderViewSet(ModelViewSet):
             'msg':'Payment Successful',
             'data':serializer.data
         }
-        return data
+        return Response(data)
 
 
     def get_serializer_class(self):
